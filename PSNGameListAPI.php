@@ -4,7 +4,7 @@
  * Plugin Name: PSNGameListApi
  * Plugin URI: https://www.azimiao.com
  * Description: 一个WP用的PSN游戏库 API，用来提供显示 PSN 游戏列表的接口
- * Version: 1.0.0b1
+ * Version: 1.0.0b2
  * Author: 野兔#梓喵出没
  * Author URI: https://www.azimiao.com
  */
@@ -13,7 +13,7 @@ require_once("Functions/wp-network.php");
 
 class Azimiao_PSN_Api
 {
-    private $plugin_version = "v1.0.0b1";
+    private $plugin_version = "v1.0.0b2";
 
     /**==================Options=================== **/
 
@@ -391,7 +391,7 @@ class Azimiao_PSN_Api
 
             $fullUrl = $options[$this->api_base] . "/token?" . http_build_query($k);
 
-            $content = PSNAPI_WPNetwork::http_get_contents($fullUrl);
+            $content = PSNAPI_WPNetwork::http_get_contents($fullUrl,15);
 
             $k = json_decode($content);
 
@@ -428,7 +428,7 @@ class Azimiao_PSN_Api
 
         $fullGameListUrl = $options[$this->api_base] . "/gamelist?" . http_build_query($gameListParams);
 
-        $t  = PSNAPI_WPNetwork::http_get_contents($fullGameListUrl);
+        $t  = PSNAPI_WPNetwork::http_get_contents($fullGameListUrl,15);
 
         if($t == null || $t === ""){
             $options[$this->psn_account_token] = "";
@@ -463,7 +463,7 @@ class Azimiao_PSN_Api
             );
 
             $fullUrl = $options[$this->api_base] . "/token?" . http_build_query($k);
-            $content = PSNAPI_WPNetwork::http_get_contents($fullUrl);
+            $content = PSNAPI_WPNetwork::http_get_contents($fullUrl,15);
             $k = json_decode($content);
             if($k == null || !isset($k->code)){
                 error_log("trophy:code null" . $content);
@@ -502,7 +502,7 @@ class Azimiao_PSN_Api
         $fullGameListUrl = $options[$this->api_base] . "/trophy?" . http_build_query($gameListParams);
         
 
-        $t  = PSNAPI_WPNetwork::http_get_contents($fullGameListUrl);
+        $t  = PSNAPI_WPNetwork::http_get_contents($fullGameListUrl,15);
 
         if($t == null || $t == ""){
             $options[$this->psn_account_token] = "";
