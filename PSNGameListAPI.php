@@ -77,7 +77,6 @@ class Azimiao_PSN_Api
 
             $options[$this->psn_account_id] = 0;
             $options[$this->psn_account_npsso] = "";
-            $options[$this->psn_client_id] = "";
 
             $options[$this->psn_account_token] = "";
             $options[$this->psn_account_token_expire] = -1;
@@ -122,7 +121,6 @@ class Azimiao_PSN_Api
 
                 $options[$this->psn_account_id] = intval($_POST[$this->psn_account_id] ?? 0);
                 $options[$this->psn_account_npsso] = strval($_POST[$this->psn_account_npsso] ?? "");
-                $options[$this->psn_client_id] = strval($_POST[$this->psn_client_id] ?? "");
 
 
                 update_option($this->optionName, $options);
@@ -298,10 +296,6 @@ class Azimiao_PSN_Api
                                 <td>NPSSO：</td>
                                 <td><label><input type="text" name="<?php echo $this->psn_account_npsso ?>" rows="1" style="width:410px;" value="<?php echo ($options[$this->psn_account_npsso]); ?>"></label></td>
                             </tr>
-                            <tr>
-                                <td>设备ID：</td>
-                                <td><label><input type="text" name="<?php echo $this->psn_client_id ?>" rows="1" style="width:410px;" value="<?php echo ($options[$this->psn_client_id]); ?>"></label></td>
-                            </tr>
 
                             <tr>
                                 <td>
@@ -375,71 +369,78 @@ class Azimiao_PSN_Api
     }
     public function GetGameList()
     {
-        //wp-ajax 处理方法
-        $options = $this->getOption();
-        $offset = intval($_GET["offset"] ?? 0);
-        $limit =  intval($_GET["limit"] ?? 10);
+        // //wp-ajax 处理方法
+        // $options = $this->getOption();
+        // $offset = intval($_GET["offset"] ?? 0);
+        // $limit =  intval($_GET["limit"] ?? 10);
+
+        // //When Token is null,try get token
+        // if($options[$this->psn_account_token] === "" || $options[$this->psn_account_token_expire] <= time()){
+            
+        //     $k = array(
+        //         "auth_key" => $options[$this->azimiao_invitecode],
+        //         "npsso" => $options[$this->psn_account_npsso],
+        //     );
+            
+
+        //     $fullUrl = $options[$this->api_base] . "/token?" . http_build_query($k);
+
+        //     $content = PSNAPI_WPNetwork::http_get_contents($fullUrl,15);
+
+        //     $k = json_decode($content);
+
+        //     if($k == null || !isset($k->code)){
+        //         $options[$this->psn_account_token] = "";
+        //         update_option($this->optionName, $options);
+        //         echo $k;
+        //         die();
+        //     }
+        //     if(!isset($k->data)){
+        //         echo $k;
+        //         die();
+        //     }
 
 
-        if($options[$this->psn_account_token] === "" || $options[$this->psn_account_token_expire] <= time()){
-            //TODO:Get and Update Token
-            $k = array(
-                "auth_key" => $options[$this->azimiao_invitecode],
-                "npsso" => $options[$this->psn_account_npsso],
-                "client_id" => $options[$this->psn_client_id]
-            );
 
-            $fullUrl = $options[$this->api_base] . "/token?" . http_build_query($k);
+        //     if(intval($k->code) != 200 || !isset($k->data->access_token)){
+        //         $options[$this->psn_account_token] = "";
+        //         update_option($this->optionName, $options);
+        //         header("content-type:application/json");
+        //         echo $k;
+        //         die();
+        //     }
 
-            $content = PSNAPI_WPNetwork::http_get_contents($fullUrl,15);
+        //     $options[$this->psn_account_token] = $k->data->access_token ?? "";
+        //     $options[$this->psn_account_token_expire] = intval((intval($k->data->expires ?? 0) + time() - 60));
 
-            $k = json_decode($content);
+        //     update_option($this->optionName, $options);
+        // }
 
-            if($k == null || !isset($k->code)){
-                $options[$this->psn_account_token] = "";
-                update_option($this->optionName, $options);
-                echo $k;
-                die();
-            }
+        // $gameListParams = array(
+        //     "auth_key" => $options[$this->azimiao_invitecode],
+        //     "npsso" => $options[$this->psn_account_npsso],
+        //     "offset"=>$offset,
+        //     "limit"=>$limit
+        // );
 
-            if(intval($k->code) != 200 || !isset($k->access_token)){
-                $options[$this->psn_account_token] = "";
-                update_option($this->optionName, $options);
-                header("content-type:application/json");
-                echo $k;
-                die();
-            }
+        // $requestBody = array(
+        //     "access_token"=>$options[$this->psn_account_token]
+        // );
 
-            $options[$this->psn_account_token] = $k->access_token ?? "";
-            $options[$this->psn_account_token_expire] = intval((intval($k->expires ?? 0) + time() - 60));
+        // $fullGameListUrl = $options[$this->api_base] . "/trophy?" . http_build_query($gameListParams);
 
-            update_option($this->optionName, $options);
-        }
+        // $t  = PSNAPI_WPNetwork::http_post_contents($fullGameListUrl,15,array('Content-Type' => 'application/json; charset=utf-8'),json_encode($requestBody));
 
-        $gameListParams = array(
-            "auth_key" => $options[$this->azimiao_invitecode],
-            "npsso" => $options[$this->psn_account_npsso],
-            "client_id" => $options[$this->psn_client_id],
-            "account_id"=>$options[$this->psn_account_id],
-            "token"=>$options[$this->psn_account_token],
-            "offset"=>$offset,
-            "limit"=>$limit
-        );
-
-        $fullGameListUrl = $options[$this->api_base] . "/gamelist?" . http_build_query($gameListParams);
-
-        $t  = PSNAPI_WPNetwork::http_get_contents($fullGameListUrl,15);
-
-        if($t == null || $t === ""){
-            $options[$this->psn_account_token] = "";
-            update_option($this->optionName, $options);
-            echo $t;
-            die();
-        }else{
-            header("content-type:application/json");
-            echo $t;
-            die();
-        }
+        // if($t == null || $t === ""){
+        //     $options[$this->psn_account_token] = "";
+        //     update_option($this->optionName, $options);
+        //     echo $t;
+        //     die();
+        // }else{
+        //     header("content-type:application/json");
+        //     echo $t;
+        //     die();
+        // }
     }
 
     public function GetTrophyList()
@@ -459,7 +460,6 @@ class Azimiao_PSN_Api
             $k = array(
                 "auth_key" => $options[$this->azimiao_invitecode],
                 "npsso" => $options[$this->psn_account_npsso],
-                "client_id" => $options[$this->psn_client_id]
             );
 
             $fullUrl = $options[$this->api_base] . "/token?" . http_build_query($k);
@@ -476,8 +476,9 @@ class Azimiao_PSN_Api
                 die();
             }
 
-            if(intval($k->code) != 200 || !isset($k->access_token)){
+            if(intval($k->code) != 200 || !isset($k->data->access_token)){
                 error_log("trophy:token null or code != 200");
+                error_log("k data is null ?" . isset($k->data->access_token));
                 $options[$this->psn_account_token] = "";
                 $options[$this->psn_account_token_expire] = -1;
                 update_option($this->optionName, $options);
@@ -485,36 +486,42 @@ class Azimiao_PSN_Api
                 die();
             }
 
-            $options[$this->psn_account_token] = $k->access_token;
-            $options[$this->psn_account_token_expire] = intval((intval($k->expires ?? 0) + time() - 60));
+            $options[$this->psn_account_token] = $k->data->access_token;
+            $options[$this->psn_account_token_expire] = intval((intval($k->data->expires ?? 0) + time() - 60));
 
             update_option($this->optionName, $options);
         }
 
+
         $gameListParams = array(
             "auth_key" => $options[$this->azimiao_invitecode],
-            "account_id"=>$options[$this->psn_account_id],
-            "token"=>$options[$this->psn_account_token],
+            "npsso" => $options[$this->psn_account_npsso],
             "offset"=>$offset,
             "limit"=>$limit
+        );
+
+
+        $requestBody = array(
+            "access_token"=>$options[$this->psn_account_token]
         );
 
         $fullGameListUrl = $options[$this->api_base] . "/trophy?" . http_build_query($gameListParams);
         
 
-        $t  = PSNAPI_WPNetwork::http_get_contents($fullGameListUrl,15);
-
+        $t  = PSNAPI_WPNetwork::http_post_contents($fullGameListUrl,15,array('Content-Type' => 'application/json; charset=utf-8'),json_encode($requestBody));
+        
         if($t == null || $t == ""){
+            error_log("get trophy result error!");
             $options[$this->psn_account_token] = "";
             $options[$this->psn_account_token_expire] = -1;
             update_option($this->optionName, $options);
             echo $t;
             die();
         }else{
+            //todo: 判断 Token 失效并刷新 token
             echo $t;
             die();
         }
-
     }
 
 }

@@ -2,14 +2,16 @@
 WordPress PSN 游戏列表数据 API 插件，供其他插件使用。
 
 # 前置依赖
-本插件依赖[PSN-PHP-RESTAPI](https://github.com/Noob-Biosphere/PSN-PHP-RESTApi)提供的服务。
+~~本插件依赖[PSN-PHP-RESTAPI](https://github.com/Noob-Biosphere/PSN-PHP-RESTApi)提供的服务。~~
 
-前置服务还处于开发及测试阶段，因此该仓库目前为私有仓库。前置服务开发与测试完成后，仓库将公开。
+本插件依赖[PSN-API-With-Node-Express](https://github.com/Noob-Biosphere/PSN-API-With-Node-Express)提供的服务。
 
-在开发阶段，需要自建服务或使用我们提供的服务请加群`313732000`。
+~~前置服务还处于开发及测试阶段，因此该仓库目前为私有仓库。前置服务开发与测试完成后，仓库将公开。~~
+
+正处于开发阶段，交流请加群`313732000`，注明`Github PSN 奖杯插件`。
 
 # Demo
-[http://test.azimiao.com/?p=16](http://test.azimiao.com/?p=16)
+~~[http://test.azimiao.com/?p=16](http://test.azimiao.com/?p=16)~~
 
 # 功能
 本插件后台提供设置账号、npsso 信息的设置面板，同时基于 wp-ajax 提供一个游戏列表接口。
