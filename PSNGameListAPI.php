@@ -4,7 +4,7 @@
  * Plugin Name: PSNGameListApi
  * Plugin URI: https://www.azimiao.com
  * Description: 一个WP用的PSN游戏库 API，用来提供显示 PSN 游戏列表的接口
- * Version: 1.0.0b2
+ * Version: 1.0.0b3
  * Author: 野兔#梓喵出没
  * Author URI: https://www.azimiao.com
  */
@@ -13,7 +13,7 @@ require_once("Functions/wp-network.php");
 
 class Azimiao_PSN_Api
 {
-    private $plugin_version = "v1.0.0b2";
+    private $plugin_version = "v1.0.0b3";
 
     /**==================Options=================== **/
 
@@ -288,7 +288,7 @@ class Azimiao_PSN_Api
                             </tr>
 
                             <tr>
-                                <td>账号ID（数字）：</td>
+                                <td>账号ID（目前不需要了）：</td>
                                 <td><label><input type="number" name="<?php echo $this->psn_account_id ?>" rows="1" style="width:410px;" value="<?php echo ($options[$this->psn_account_id]); ?>"></label></td>
                             </tr>
                            
